@@ -1,12 +1,13 @@
 # homeassistant-timebox-mini
 Divoom Timebox Mini custom service component for Home Assistant.
+Based on [ScR4tCh/timebox](https://github.com/ScR4tCh/timebox) converted to Python3 and fixed.
 
 The Divoom Timebox Mini is a Bluetooth speaker with a 11x11 RGB LED matrix.
 
 ![Timebox Mini](res/timebox-mini.jpg)
 
 This component allow to run the following actions on your Timebox Mini from a HomeAssistant service:
-- Set the clock
+- Set the clock automatically from your system clock
 - Display the clock
 - Set the volume level
 - Display a picture from predefined choices (see [matrices](timebox_mini/matrices) folder)
@@ -46,3 +47,9 @@ Please note that if you change the content on your Timebox without using the ser
 
 ## Troubleshooting
 If the actions are not applied to your Timebox, you may need to pair manually with your device first using your OS Bluetooth settings.
+
+## TODO
+- Brightness setting
+- Weather info setting
+- Display animation
+- [Moving text](https://github.com/DaveDavenport/timebox/blob/master/examples/movingtext.py)
