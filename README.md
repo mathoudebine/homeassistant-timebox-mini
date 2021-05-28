@@ -11,8 +11,10 @@ This component allow to run the following actions on your Timebox Mini from a Ho
 - Display the clock
 - Set the audio volume level
 - Set the LED brightness level
-- Display a picture from predefined choices (see [matrices](timebox_mini/matrices) folder)
 - Display the weather information (you have to use Divoom phone app to send weather info to your timebox)
+- Display a picture from predefined choices (see [matrices](timebox_mini/matrices) folder) :
+
+<img src="res/timebox-mini-homeassistant.png" width="200"/><img src="res/timebox-mini-hourglass.png" width="200"/><img src="res/timebox-mini-locked.png" width="200"/><img src="res/timebox-mini-unlocked.png" width="200"/><img src="res/timebox-mini-small-bell.png" width="200"/><img src="res/timebox-mini-green-check.png" width="200"/><img src="res/timebox-mini-red-cross.png" width="200"/><img src="res/timebox-mini-orange-warning.png" width="200"/>
 
 ## Setup instructions
 ### Copying into custom_components folder
