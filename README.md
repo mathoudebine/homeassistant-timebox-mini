@@ -49,7 +49,7 @@ Please note that if you change the content on your Timebox without using the ser
 If the actions are not applied to your Timebox, you may need to pair manually with your device first using your OS Bluetooth settings.
 
 ## TODO
-- Brightness setting
+- [Brightness setting](https://github.com/derHeinz/divoom-adapter/blob/master/divoom_protocol.py#L72)
 - Weather info setting
 - Display animation
 - [Moving text](https://github.com/DaveDavenport/timebox/blob/master/examples/movingtext.py)
