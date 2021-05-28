@@ -23,6 +23,7 @@ action:
           options:
             - "weather"
             - "image"
+            - "animation"
             - "clock"
             - "set_volume"
             - "set_time"
@@ -64,6 +65,18 @@ action:
             - "wifi"
             - "wifi_no_black"
             - "wifi_black"
+
+    animation:
+      name: Animation name
+      description: Name of the animation to display for 'animation' action
+      required: false
+      example: "orange_warning"
+      default: "orange_warning"
+      # Selector (https://www.home-assistant.io/docs/blueprint/selectors/) to control the input UI for this field
+      selector:
+        select:
+          options:
+            - "orange_warning"
 
     volume:
       name: Audio volume

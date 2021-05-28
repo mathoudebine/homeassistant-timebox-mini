@@ -19,6 +19,7 @@ DOMAIN = "timebox_mini"
 ATTR_MAC = "mac_addr"
 ATTR_ACTION = "action"
 ATTR_IMAGE = "image"
+ATTR_ANIM = "animation"
 ATTR_VOLUME = "volume"
 ATTR_BRIGHTNESS = "brightness"
 
@@ -244,10 +245,9 @@ def load_image(file, sz=11, scale=None):
         return process_image(imagedata, sz, scale)
 
 
-def load_gif_frames(file, sz=11, scale=None):
-    with Image.open(file) as imagedata:
-        for f in getFrames(imagedata):
-            yield process_image(f, sz, scale)
+def load_gif_frames(imagedata, sz=11, scale=None):
+    for f in getFrames(imagedata):
+        yield process_image(f, sz, scale)
 
 
 def conv_image(data):
@@ -301,6 +301,26 @@ def setup(hass, config):
             hass.states.set(entity_id=DOMAIN + "." + slugify(mac) + "_current_view",
                             new_state=action,
                             attributes={'image': image})
+
+        elif action == "animation":
+            anim = call.data.get(ATTR_ANIM, "orange_warning")
+            _LOGGER.debug('Action : animation %s' % (dir_path + "/animations/" + anim + ".gif"))
+            frames = []
+            imagedata = Image.open(dir_path + "/animations/" + anim + ".gif")
+            # Get duration of first frame and use it for all animation
+            delay = int(imagedata.info['duration']/125) # Better than /100 to compensate Timebox frame change delay
+            for f in load_gif_frames(imagedata):
+                frames.append(f)
+            i = 0
+            for f in prepare_animation(frames, delay=delay):
+                i = i + 1
+                if i == len(frames):
+                    dev.send(f)
+                else:
+                    dev.send(f, False)
+            hass.states.set(entity_id=DOMAIN + "." + slugify(mac) + "_current_view",
+                            new_state=action,
+                            attributes={'animation': anim})
 
         elif action == "weather":
             _LOGGER.debug('Action : weather')
