@@ -15,7 +15,7 @@ _LOGGER = logging.getLogger(__name__)
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
 # HomeAssistant service definitions
-DOMAIN = "timebox-mini"
+DOMAIN = "timebox_mini"
 ATTR_MAC = "mac_addr"
 ATTR_ACTION = "action"
 ATTR_IMAGE = "image"
@@ -302,14 +302,21 @@ def setup(hass, config):
             image = call.data.get(ATTR_IMAGE, "home-assistant-black")
             _LOGGER.debug('Action : image %s' % (dir_path + "/matrices/" + image + ".png"))
             dev.send(conv_image(load_image(dir_path + "/matrices/" + image + ".png")))
+            hass.states.set(entity_id=DOMAIN + "." + slugify(mac) + "_current_view",
+                            new_state=action,
+                            attributes={'image': image})
 
         elif action == "weather":
             _LOGGER.debug('Action : weather')
             dev.send(set_temp_color(c[0], c[1], c[2], 0xff))
+            hass.states.set(entity_id=DOMAIN + "." + slugify(mac) + "_current_view",
+                            new_state=action)
 
         elif action == "clock":
             _LOGGER.debug('Action : clock')
             dev.send(set_time_color(c[0], c[1], c[2], 0xff))
+            hass.states.set(entity_id=DOMAIN + "." + slugify(mac) + "_current_view",
+                            new_state=action)
 
         elif action == "set_volume":
             vol = call.data.get(ATTR_VOLUME, 4)
@@ -329,9 +336,6 @@ def setup(hass, config):
 
         # Disconnect from device
         dev.disconnect()
-
-        # Save timebox last state
-        hass.states.set("timebox." + slugify(mac) + "_action", action)
 
     hass.services.register(DOMAIN, "action", handle_action)
 
