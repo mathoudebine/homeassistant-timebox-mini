@@ -20,7 +20,7 @@ ATTR_MAC = "mac_addr"
 ATTR_ACTION = "action"
 ATTR_IMAGE = "image"
 ATTR_VOLUME = "volume"
-
+ATTR_BRIGHTNESS = "brightness"
 
 class Timebox:
     debug = False
@@ -117,7 +117,6 @@ def mask(bytes):
 def checksum(s):
     ck1 = s & 0x00ff
     ck2 = s >> 8
-
     return ck1, ck2
 
 
@@ -125,10 +124,7 @@ def set_time_color(r, g, b, x=0x00, h24=True):
     head = [0x09, 0x00, 0x45, 0x00, 0x01 if h24 else 0x00]
     s = sum(head) + sum([r, g, b, x])
     ck1, ck2 = checksum(s)
-
-    # create message mask 0x01,0x02,0x03
     msg = [0x01] + mask(head) + mask([r, g, b, x]) + mask([ck1, ck2]) + [0x02]
-
     return msg
 
 
@@ -136,20 +132,21 @@ def set_temp_color(r, g, b, x, f=False):
     head = [0x09, 0x00, 0x45, 0x01, 0x01 if f else 0x00]
     s = sum(head) + sum([r, g, b, x])
     ck1, ck2 = checksum(s)
-
-    # create message mask 0x01,0x02,0x03
     msg = [0x01] + mask(head) + mask([r, g, b, x]) + mask([ck1, ck2]) + [0x02]
-
     return msg
 
 
 def set_temp_unit(f=False):
     head = [0x09, 0x00, 0x45, 0x01, 0x01 if f else 0x00]
     ck1, ck2 = checksum(sum(head))
-
-    # create message mask 0x01,0x02,0x03
     msg = [0x01] + mask(head) + mask([ck1, ck2]) + [0x02]
+    return msg
 
+
+def set_brightness(value):
+    head = [0x04, 0x00, 0x74, int(value)]
+    ck1, ck2 = checksum(sum(head))
+    msg = [0x01] + mask(head) + mask([ck1, ck2]) + [0x02]
     return msg
 
 
@@ -258,7 +255,6 @@ def conv_image(data):
     head = [0xbd, 0x00, 0x44, 0x00, 0x0a, 0x0a, 0x04]
     data = data
     ck1, ck2 = checksum(sum(head) + sum(data))
-
     msg = [0x01] + head + mask(data) + mask([ck1, ck2]) + [0x02]
     return msg
 
@@ -334,6 +330,11 @@ def setup(hass, config):
             ck1, ck2 = checksum(s)
             dev.send([0x01] + mask(head) + mask([ck1, ck2]) + [0x02])
 
+        elif action == "set_brightness":
+            value = call.data.get(ATTR_BRIGHTNESS, 50)
+            _LOGGER.debug('Action : set_brightness %d', value)
+            dev.send(set_brightness(value))
+ 
         # Disconnect from device
         dev.disconnect()
 

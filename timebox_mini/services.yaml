@@ -26,18 +26,7 @@ action:
             - "clock"
             - "set_volume"
             - "set_time"
-
-    volume:
-      name: Action
-      description: Audio volume level for 'set_volume' action
-      required: false
-      example: 8
-      default: 4
-      # Selector (https://www.home-assistant.io/docs/blueprint/selectors/) to control the input UI for this field
-      selector:
-        number:
-          min: 0
-          max: 15
+            - "set_brightness"
 
     image:
       name: Image name
@@ -75,3 +64,32 @@ action:
             - "wifi"
             - "wifi_no_black"
             - "wifi_black"
+
+    volume:
+      name: Audio volume
+      description: Audio volume level for 'set_volume' action
+      required: false
+      example: 8
+      default: 4
+      # Selector (https://www.home-assistant.io/docs/blueprint/selectors/) to control the input UI for this field
+      selector:
+        number:
+          min: 0
+          max: 15
+          step: 1
+          mode: slider
+
+    brightness:
+      name: Brightness
+      description: Brightness level for 'set_brightness' action
+      required: false
+      example: 75
+      default: 50
+      # Selector (https://www.home-assistant.io/docs/blueprint/selectors/) to control the input UI for this field
+      selector:
+        number:
+          min: 0
+          max: 100
+          step: 5
+          mode: slider
+          unit_of_measurement: "%"

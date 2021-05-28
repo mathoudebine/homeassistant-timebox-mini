@@ -9,7 +9,8 @@ The Divoom Timebox Mini is a Bluetooth speaker with a 11x11 RGB LED matrix.
 This component allow to run the following actions on your Timebox Mini from a HomeAssistant service:
 - Set the clock automatically from your system clock
 - Display the clock
-- Set the volume level
+- Set the audio volume level
+- Set the LED brightness level
 - Display a picture from predefined choices (see [matrices](timebox_mini/matrices) folder)
 - Display the weather information (you have to use Divoom phone app to send weather info to your timebox)
 
@@ -49,7 +50,6 @@ Please note that if you change the content on your Timebox without using the ser
 If the actions are not applied to your Timebox, you may need to pair manually with your device first using your OS Bluetooth settings.
 
 ## TODO
-- [Brightness setting](https://github.com/derHeinz/divoom-adapter/blob/master/divoom_protocol.py#L72)
 - Weather info setting
 - Display animation
 - [Moving text](https://github.com/DaveDavenport/timebox/blob/master/examples/movingtext.py)
