@@ -1,0 +1,77 @@
+action:
+  name: Timebox action
+  description: Do some action on Timebox like new view, volume set, time set...
+  fields:
+
+    mac_addr:
+      name: MAC address
+      description: Bluetooth MAC address of the Timebox
+      required: true
+      example: "11:75:58:7B:8B:29"
+      # Selector (https://www.home-assistant.io/docs/blueprint/selectors/) to control the input UI for this field
+      selector:
+        text:
+
+    action:
+      name: Action
+      description: The action to make on the timebox
+      required: true
+      example: "weather"
+      # Selector (https://www.home-assistant.io/docs/blueprint/selectors/) to control the input UI for this field
+      selector:
+        select:
+          options:
+            - "weather"
+            - "image"
+            - "clock"
+            - "set_volume"
+            - "set_time"
+
+    volume:
+      name: Action
+      description: Volume level for 'volume' action
+      required: false
+      example: 8
+      default: 4
+      # Selector (https://www.home-assistant.io/docs/blueprint/selectors/) to control the input UI for this field
+      selector:
+        number:
+          min: 0
+          max: 15
+
+    image:
+      name: Image name
+      description: Name of the image to display for 'image' action
+      required: false
+      example: "green_check"
+      default: "home-assistant-black"
+      # Selector (https://www.home-assistant.io/docs/blueprint/selectors/) to control the input UI for this field
+      selector:
+        select:
+          options:
+            - "big_bell_black"
+            - "big_bell"
+            - "black"
+            - "green_check"
+            - "home-assistant-black"
+            - "home-assistant"
+            - "home-black"
+            - "home"
+            - "hourglass_black"
+            - "hourglass_white"
+            - "locked_black"
+            - "locked"
+            - "orange_warning"
+            - "red_cross"
+            - "small_bell_black"
+            - "small_bell"
+            - "spanner"
+            - "spanner_rev"
+            - "spanner_tilted"
+            - "spanner_tilted_rev"
+            - "unlocked_black"
+            - "unlocked"
+            - "wifi_no"
+            - "wifi"
+            - "wifi_no_black"
+            - "wifi_black"

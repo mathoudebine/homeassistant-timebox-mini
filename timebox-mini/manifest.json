@@ -1,0 +1,17 @@
+{
+  "domain": "timebox-mini",
+  "name": "Timebox Mini",
+  "version": "1.0",
+  "documentation": "",
+  "requirements": [
+    "colour",
+    "pillow",
+    "python-dateutil",
+    "pybluez"
+  ],
+  "dependencies": [],
+  "codeowners": [
+    "@mathoudebine"
+  ],
+  "iot_class": "assumed_state"
+}
