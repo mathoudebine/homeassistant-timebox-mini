@@ -1,6 +1,6 @@
 action:
-  name: Timebox action
-  description: Do some action on Timebox like new view, volume set, time set...
+  name: Timebox Mini action
+  description: Do some action on Timebox Mini like new view, volume set, time set...
   fields:
 
     mac_addr:
@@ -29,7 +29,7 @@ action:
 
     volume:
       name: Action
-      description: Volume level for 'volume' action
+      description: Audio volume level for 'set_volume' action
       required: false
       example: 8
       default: 4
