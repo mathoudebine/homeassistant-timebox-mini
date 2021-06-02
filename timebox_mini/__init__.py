@@ -308,7 +308,9 @@ def setup(hass, config):
             frames = []
             imagedata = Image.open(dir_path + "/animations/" + anim + ".gif")
             # Get duration of first frame and use it for all animation
-            delay = int(imagedata.info['duration']/125) # Better than /100 to compensate Timebox frame change delay
+            delay = int(imagedata.info['duration']/200)
+            if delay <= 0:
+                delay = 1
             for f in load_gif_frames(imagedata):
                 frames.append(f)
             i = 0

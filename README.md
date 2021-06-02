@@ -1,6 +1,7 @@
 # homeassistant-timebox-mini
 Divoom Timebox Mini custom service component for Home Assistant.
-Based on [ScR4tCh/timebox](https://github.com/ScR4tCh/timebox) converted to Python3 and fixed.
+
+Timebox protocol extracted from [ScR4tCh/timebox](https://github.com/ScR4tCh/timebox)
 
 ### Table of content
 * [Setup instructions](#setup-instructions)
@@ -37,6 +38,7 @@ The result of your copy action(s) should yield a directory structure like so:
 .homeassistant/
 |-- custom_components/
 |   |-- timebox_mini/
+|       |-- animations/*.gif
 |       |-- matrices/*.png
 |       |-- __init__.py
 |       |-- manifest.json
@@ -74,7 +76,8 @@ NOTE : the Timebox has a limited color set and cannot display all RGB shades, so
 ### Animation
 You can create a .gif for your animation using [EzGif Maker online tool](https://ezgif.com/maker). Start by loading all the matrices for your .gif that you have created previously (see above).
 
-- Set the same delay for all frames. Timebox does not support different frame delays
+- Set the same delay for all frames. Timebox does not support different frame delays : if you want a frame to appear longer, duplicate it (use "copy" button).
+- Min. delay is 200ms (`delay:20`), Timebox cannot display frames faster.
 - Check `use global colormap`
 - Click `Make a gif!` then click `Save` icon on the far right
 

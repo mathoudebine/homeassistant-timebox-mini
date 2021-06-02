@@ -34,7 +34,7 @@ action:
       description: Name of the image to display for 'image' action
       required: false
       example: "green_check"
-      default: "home-assistant-black"
+      default: "home_assistant_black"
       # Selector (https://www.home-assistant.io/docs/blueprint/selectors/) to control the input UI for this field
       selector:
         select:
@@ -42,16 +42,19 @@ action:
             - "big_bell_black"
             - "big_bell"
             - "black"
+            - "green_check_black"
             - "green_check"
-            - "home-assistant-black"
-            - "home-assistant"
-            - "home-black"
+            - "home_assistant_black"
+            - "home_assistant"
+            - "home_black"
             - "home"
             - "hourglass_black"
             - "hourglass_white"
             - "locked_black"
             - "locked"
+            - "orange_warning_black"
             - "orange_warning"
+            - "red_cross_black"
             - "red_cross"
             - "small_bell_black"
             - "small_bell"
@@ -71,12 +74,25 @@ action:
       description: Name of the animation to display for 'animation' action
       required: false
       example: "orange_warning"
-      default: "orange_warning"
+      default: "hourglass_black"
       # Selector (https://www.home-assistant.io/docs/blueprint/selectors/) to control the input UI for this field
       selector:
         select:
           options:
+            - "green_check_black"
+            - "green_check"
+            - "hourglass_black"
+            - "hourglass_white"
+            - "locked"
+            - "orange_warning_black"
             - "orange_warning"
+            - "red_cross_black"
+            - "red_cross"
+            - "wifi_black"
+            - "wifi"
+            - "wifi_no_black"
+            - "wifi_no"
+
 
     volume:
       name: Audio volume
