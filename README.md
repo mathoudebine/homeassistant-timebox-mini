@@ -4,6 +4,10 @@ Divoom Timebox Mini custom service component for Home Assistant.
 Timebox protocol extracted from [ScR4tCh/timebox](https://github.com/ScR4tCh/timebox)
 
 ### Table of content
+* [Limitations](#limitations)
+* [Requirements](#requirements)
+  * [Requirements](#bluetooth-hardware)
+  * [Home Assistant installation](#home-assistant-installation)
 * [Setup instructions](#setup-instructions)
   * [Copying into custom_components folder](#copying-into-custom_components-folder)
   * [Enabling the custom_component](#enabling-the-custom_component)
@@ -26,6 +30,37 @@ This component allow to run the following actions on your Timebox Mini from a Ho
 - Display a picture/animation from predefined choices (see [matrices](timebox_mini/matrices) and [animations](timebox_mini/animations) folders) :
 
 <img src="res/timebox-mini-homeassistant.png" width="200"/><img src="res/timebox-mini-hourglass.png" width="200"/><img src="res/timebox-mini-locked.png" width="200"/><img src="res/timebox-mini-unlocked.png" width="200"/><img src="res/timebox-mini-small-bell.png" width="200"/><img src="res/timebox-mini-green-check.png" width="200"/><img src="res/timebox-mini-red-cross.png" width="200"/><img src="res/timebox-mini-orange-warning.png" width="200"/>
+
+## Limitations
+This service cannot be used to control multiple Divoom devices from one HomeAssistant instance:
+
+To display custom content, a Bluetooth connection has to be established between the computer and your Divoom speaker when calling the service for the first time.
+
+If you try to control another Divoom device, the connection to the first device will be stopped and the device will display a blinking "Bluetooth" symbol trying to reconnect.
+
+## Requirements
+### Bluetooth Hardware
+This component uses PyBluez library for Bluetooth communication. PyBluez is based on BlueZ official Linux Bluetooth stack.
+
+Any Bluetooth hardware supported by your operating system should work. The Bluetooth interface built in to the Raspberry Pi 3 probably works, but hasn't yet been tested.
+
+To check if your Bluetooth hardware is supported, run the following command on your system:
+```bash
+>$ hcitool dev
+Devices:
+	hci0	4C:79:6E:B2:0B:00
+```
+Your Bluetooth interface should be listed as "hciX". If you have more than one, this component will use the first one.
+
+### Home Assistant installation
+Any Home assistant installation should be supported: OS, Container, Core, Supervised.
+
+**Notes for Home Assistant Core Installations**: This platform requires pybluez to be installed. On Debian based installs, run
+`sudo apt install bluetooth libbluetooth-dev python3-bluez`
+
+If you run Home Assistant in a virtual machine, you have to connect your computer Bluetooth hardware to the VM:
+- On VMWare: VM > Removable devices > (Your Bluetooth device i.e. Intel Wireless Bluetooth) > Connect
+- On VirtualBox: Devices > USB devices > (Your Bluetooth device i.e. Intel Wireless Bluetooth)
 
 ## Setup instructions
 ### Copying into custom_components folder
@@ -67,7 +102,7 @@ If the actions are not applied to your Timebox, you may need to pair manually wi
 ### Picture
 You can create your own pixel-art matrix by using [PixilArt online tool](https://www.pixilart.com/draw).
 - Start with a blank canvas of 11 x 11 
-- Once finished, go to File > Donwload and download your .png
+- Once finished, go to File > Download and download your .png
 
 Copy the .png to the [matrices](timebox_mini/matrices) folder and add its name to [services.yaml](timebox_mini/services.yaml) in the `image` selector options. Restart HomeAssistant to take effect.
 
