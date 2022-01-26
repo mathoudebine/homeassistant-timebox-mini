@@ -63,14 +63,21 @@ If you run Home Assistant in a virtual machine, you have to connect your compute
 - On VirtualBox: Devices > USB devices > (Your Bluetooth device i.e. Intel Wireless Bluetooth)
 
 ## Setup instructions
-### Copying into custom_components folder
+
+### Automatic: add repository to HACS
+1. Make sure [HACS](https://hacs.xyz/) is installed.  
+2. Go to HACS > Frontend > Three dots > Custom repositories  
+3. Add `https://github.com/mathoudebine/homeassistant-timebox-mini` as a custom repository (category: integration)  
+4. Install "Timebox Mini service" that appeared in your Integrations tab  
+
+### Manual: Copying into custom_components folder
 Create a directory `custom_components` in your Home-Assistant configuration directory.
 Copy the whole [custom_components/timebox_mini](custom_components/timebox_mini) folder from this project into the newly created directory `custom_components`.
 
 The result of your copy action(s) should yield a directory structure like so:
 
 ```
-.homeassistant/
+homeassistant/
 |-- custom_components/
 |   |-- timebox_mini/
 |       |-- animations/*.gif
