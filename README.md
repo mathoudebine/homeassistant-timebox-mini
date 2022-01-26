@@ -1,4 +1,6 @@
 # homeassistant-timebox-mini
+[![hacs_badge](https://img.shields.io/badge/custom%20repository%20for-HACS-%2303a9f4.svg?style=flat-square&logo=homeassistant&logoColor=white)](https://hacs.xyz/) [![hacs_badge](https://img.shields.io/github/languages/top/mathoudebine/homeassistant-timebox-mini?style=flat-square)](https://hacs.xyz/)
+
 Divoom Timebox Mini custom service component for Home Assistant.
 
 Timebox protocol extracted from [ScR4tCh/timebox](https://github.com/ScR4tCh/timebox)
