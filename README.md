@@ -1,5 +1,5 @@
 # homeassistant-timebox-mini
-[![hacs_badge](https://img.shields.io/badge/custom%20repository%20for-HACS-%2303a9f4.svg?style=flat-square&logo=homeassistant&logoColor=white)](https://hacs.xyz/) [![hacs_badge](https://img.shields.io/github/languages/top/mathoudebine/homeassistant-timebox-mini?style=flat-square)](https://hacs.xyz/)
+[![hacs_badge](https://img.shields.io/badge/custom%20repository%20for-HACS-%2303a9f4.svg?style=flat-square&logo=homeassistant&logoColor=white)](https://hacs.xyz/) ![hacs_badge](https://img.shields.io/github/languages/top/mathoudebine/homeassistant-timebox-mini?style=flat-square)
 
 Divoom Timebox Mini custom service component for Home Assistant.
 
@@ -38,7 +38,7 @@ This service cannot be used to control multiple Divoom devices from one HomeAssi
 
 To display custom content, a Bluetooth connection has to be established between the computer and your Divoom speaker when calling the service for the first time.
 
-If you try to control another Divoom device, the connection to the first device will be stopped and the device will display a blinking "Bluetooth" symbol trying to reconnect.
+If you try to control another Divoom device, the connection to the first device will be stopped and the device will display a blinking "Bluetooth" symbol trying to reconnect. This is a Divoom limitation.
 
 ## Requirements
 ### Bluetooth Hardware
@@ -128,5 +128,6 @@ You can create a .gif for your animation using [EzGif Maker online tool](https:/
 Copy the .gif to the [animations](custom_components/timebox_mini/animations) folder and add its name to [services.yaml](custom_components/timebox_mini/services.yaml) in the `animation` selector options. Restart HomeAssistant to take effect.
 
 ## TODO
+- Specify which bluetooth adapter to use (to have multiple Timebox, one per adapter)
 - Weather info setting
 - [Moving text](https://github.com/DaveDavenport/timebox/blob/master/examples/movingtext.py)
