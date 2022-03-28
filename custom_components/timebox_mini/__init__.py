@@ -2,12 +2,15 @@ from PIL import Image
 from colour import Color
 from homeassistant.util import slugify
 from itertools import product
-from timebox import Timebox
+from .timebox import Timebox
 import bluetooth
 import datetime
 import logging
 import math
 import os
+
+# Width/height of the Timebox (11x11 for the Mini), can be changed for other Timebox support (untested)
+TIMEBOX_SIZE = 11
 
 # initial connection reply
 TIMEBOX_HELLO = [0, 5, 72, 69, 76, 76, 79, 0]
@@ -151,18 +154,10 @@ def getFrames(im):
     '''
     mode = analyseImage(im)['mode']
 
-    p = im.getpalette()
     last_frame = im.convert('RGBA')
 
     try:
         while True:
-            '''
-            If the GIF uses local colour tables, each frame will have its own palette.
-            If not, we need to apply the global palette to the new frame.
-            '''
-            if not im.getpalette():
-                im.putpalette(p)
-
             new_frame = Image.new('RGBA', im.size)
 
             '''
@@ -181,7 +176,7 @@ def getFrames(im):
         pass
 
 
-def process_image(imagedata, sz=11, scale=None):
+def process_image(imagedata, sz=TIMEBOX_SIZE, scale=None):
     img = [0]
     bc = 0
     first = True
@@ -208,18 +203,17 @@ def process_image(imagedata, sz=11, scale=None):
     return img
 
 
-def load_image(file, sz=11, scale=None):
+def load_image(file, sz=TIMEBOX_SIZE, scale=None):
     with Image.open(file).convert("RGBA") as imagedata:
         return process_image(imagedata, sz, scale)
 
 
-def load_gif_frames(imagedata, sz=11, scale=None):
+def load_gif_frames(imagedata, sz=TIMEBOX_SIZE, scale=None):
     for f in getFrames(imagedata):
         yield process_image(f, sz, scale)
 
 
 def conv_image(data):
-    # should be 11x11 px =>
     head = [0xbd, 0x00, 0x44, 0x00, 0x0a, 0x0a, 0x04]
     data = data
     ck1, ck2 = checksum(sum(head) + sum(data))
@@ -263,7 +257,7 @@ def setup(hass, config):
         c = color_convert(Color("white").get_rgb())
 
         if action == "image":
-            image = call.data.get(ATTR_IMAGE, "home-assistant-black")
+            image = call.data.get(ATTR_IMAGE, "home_assistant_black")
             _LOGGER.debug('Action : image %s' % (dir_path + "/matrices/" + image + ".png"))
             dev.send(conv_image(load_image(dir_path + "/matrices/" + image + ".png")))
             hass.states.set(entity_id=DOMAIN + "." + slugify(mac) + "_current_view",

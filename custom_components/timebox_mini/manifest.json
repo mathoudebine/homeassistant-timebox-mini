@@ -1,7 +1,7 @@
 {
   "domain": "timebox_mini",
   "name": "Timebox Mini",
-  "version": "1.0",
+  "version": "1.0.1",
   "documentation": "https://github.com/mathoudebine/homeassistant-timebox-mini",
   "issue_tracker": "https://github.com/mathoudebine/homeassistant-timebox-mini/issues",
   "requirements": [
