@@ -257,7 +257,7 @@ def setup(hass, config):
         c = color_convert(Color("white").get_rgb())
 
         if action == "image":
-            image = call.data.get(ATTR_IMAGE, "home-assistant-black")
+            image = call.data.get(ATTR_IMAGE, "home_assistant_black")
             _LOGGER.debug('Action : image %s' % (dir_path + "/matrices/" + image + ".png"))
             dev.send(conv_image(load_image(dir_path + "/matrices/" + image + ".png")))
             hass.states.set(entity_id=DOMAIN + "." + slugify(mac) + "_current_view",
