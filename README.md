@@ -44,7 +44,8 @@ If you try to control another Divoom device, the connection to the first device 
 ### Bluetooth Hardware
 This component uses Python sockets for Bluetooth communication.
 
-Any Bluetooth hardware supported by your operating system should work. The Bluetooth interface built in to the Raspberry Pi 3 probably works, but hasn't been tested yet.
+Any Bluetooth hardware supported by your operating system should work. The Bluetooth interface built in to the Raspberry Pi 3 probably works, but hasn't been tested yet.  
+**Check that your hardware is not listed as "unsupported" here: https://www.home-assistant.io/integrations/bluetooth/**  
 
 To check if your Bluetooth hardware is supported, run the following command on your system:
 ```bash
