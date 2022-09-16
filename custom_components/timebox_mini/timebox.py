@@ -1,17 +1,19 @@
-import bluetooth
 import logging
+import socket
 
 _LOGGER = logging.getLogger(__name__)
+
+BTPROTO_RFCOMM = 3
 
 class Timebox:
     debug = False
 
     def __init__(self, target):
-        if (isinstance(target, bluetooth.BluetoothSocket)):
+        if isinstance(target, socket.socket):
             self.sock = target
             self.addr, _ = self.sock.getpeername()
         else:
-            self.sock = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
+            self.sock = socket.socket(socket.AF_BLUETOOTH, socket.SOCK_STREAM, BTPROTO_RFCOMM)
             self.addr = target
             self.sock.connect((self.addr, 4))
 

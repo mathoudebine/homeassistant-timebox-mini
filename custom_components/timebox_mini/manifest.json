@@ -1,14 +1,13 @@
 {
   "domain": "timebox_mini",
   "name": "Timebox Mini",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "documentation": "https://github.com/mathoudebine/homeassistant-timebox-mini",
   "issue_tracker": "https://github.com/mathoudebine/homeassistant-timebox-mini/issues",
   "requirements": [
     "colour",
     "pillow",
-    "python-dateutil",
-    "pybluez"
+    "python-dateutil"
   ],
   "dependencies": [],
   "codeowners": [

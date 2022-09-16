@@ -42,9 +42,9 @@ If you try to control another Divoom device, the connection to the first device 
 
 ## Requirements
 ### Bluetooth Hardware
-This component uses PyBluez library for Bluetooth communication. PyBluez is based on BlueZ official Linux Bluetooth stack.
+This component uses Python sockets for Bluetooth communication.
 
-Any Bluetooth hardware supported by your operating system should work. The Bluetooth interface built in to the Raspberry Pi 3 probably works, but hasn't yet been tested.
+Any Bluetooth hardware supported by your operating system should work. The Bluetooth interface built in to the Raspberry Pi 3 probably works, but hasn't been tested yet.
 
 To check if your Bluetooth hardware is supported, run the following command on your system:
 ```bash
@@ -56,9 +56,6 @@ Your Bluetooth interface should be listed as "hciX". If you have more than one, 
 
 ### Home Assistant installation
 Any Home assistant installation should be supported: OS, Container, Core, Supervised.
-
-**Notes for Home Assistant Core Installations**: This platform requires pybluez to be installed. On Debian based installs, run
-`sudo apt install bluetooth libbluetooth-dev python3-bluez`
 
 If you run Home Assistant in a virtual machine, you have to connect your computer Bluetooth hardware to the VM:
 - On VMWare: VM > Removable devices > (Your Bluetooth device i.e. Intel Wireless Bluetooth) > Connect

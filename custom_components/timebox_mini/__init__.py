@@ -3,7 +3,6 @@ from colour import Color
 from homeassistant.util import slugify
 from itertools import product
 from .timebox import Timebox
-import bluetooth
 import datetime
 import logging
 import math
@@ -250,8 +249,8 @@ def setup(hass, config):
             dev = Timebox(mac)
             dev.connect()
             _LOGGER.debug('Connected to %s' % mac)
-        except bluetooth.BluetoothError as be:
-            _LOGGER.error('Error connecting to %s : %s' % (mac, be))
+        except Exception as e:
+            _LOGGER.error('Error connecting to %s : %s' % (mac, e))
             return
 
         c = color_convert(Color("white").get_rgb())
