@@ -44,7 +44,7 @@ If you try to control another Divoom device, the connection to the first device 
 ### Bluetooth Hardware
 This component uses Python sockets for Bluetooth communication.
 
-Any Bluetooth hardware supported by your operating system should work. The Bluetooth interface built in to the Raspberry Pi 3 probably works, but hasn't been tested yet.  
+Any Bluetooth hardware supported by your operating system should work. The Bluetooth interface of the Raspberry Pi 3/4 probably works, but hasn't been tested yet.  
 **Check that your hardware is not listed as "unsupported" here: https://www.home-assistant.io/integrations/bluetooth/**  
 
 To check if your Bluetooth hardware is supported, run the following command on your system:
@@ -53,7 +53,13 @@ To check if your Bluetooth hardware is supported, run the following command on y
 Devices:
 	hci0	4C:79:6E:B2:0B:00
 ```
-Your Bluetooth interface should be listed as "hciX". If you have more than one, this component will use the first one.
+or
+```
+>$ bluetoothctl
+[bluetooth]# list
+  Controller 4C:79:6E:B2:0B:00 [default]
+```
+Your Bluetooth interface should be listed. If you have more than one, this component will use the first one or the one listed as default.
 
 ### Home Assistant installation
 Any Home assistant installation should be supported: OS, Container, Core, Supervised.
@@ -103,7 +109,40 @@ When you run an action that changes what is displayed on the Timebox, an entity 
 Please note that if you change the content on your Timebox without using the service (i.e. mobile app) this entity will not be updated.
 
 ## Troubleshooting
-If the actions are not applied to your Timebox, you may need to pair manually with your device first using your OS Bluetooth settings.
+If the actions are not applied to your Timebox when calling the service, you may need to pair manually with your device first using your OS Bluetooth settings or bluetoothctl:
+```
+[bluetooth]# list     
+  --> Check that you have only one dongle listed
+[bluetooth]# select [MAC address of your dongle]
+[bluetooth]# power on
+[bluetooth]# scan on
+[bluetooth]# pair [your Timebox MAC address]
+[bluetooth]# connect [your Timebox MAC address]
+[bluetooth]# scan off
+```
+If calling the service still does not work, check  Home Assistant logs. If you have the following errors:
+```
+[custom_components.timebox_mini] Error connecting to 11:75:58:A6:00:00 : [Errno 16] Resource busy
+[custom_components.timebox_mini] Error connecting to 11:75:58:A6:00:00 : [Errno 112] Host is down
+```
+you need to reset your dongle and pair with the Timebox again:
+```
+[bluetooth]# list     
+  --> Check that you have only one dongle listed
+[bluetooth]# select [MAC address of your dongle]
+[bluetooth]# scan off
+[bluetooth]# disconnect [your Timebox MAC address]
+  --> ignore if error
+[bluetooth]# remove [your Timebox MAC address]
+  --> ignore if error
+[bluetooth]# power off
+  --> should display "Changing power off succeeded"
+[bluetooth]# power on
+[bluetooth]# scan on
+[bluetooth]# pair [your Timebox MAC address]
+[bluetooth]# connect [your Timebox MAC address]
+[bluetooth]# scan off
+```
 
 ## Create your own picture / animation
 ### Picture
