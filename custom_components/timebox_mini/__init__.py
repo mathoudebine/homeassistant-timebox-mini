@@ -21,6 +21,7 @@ dir_path = os.path.dirname(os.path.realpath(__file__))
 DOMAIN = "timebox_mini"
 ATTR_MAC = "mac_addr"
 ATTR_ACTION = "action"
+ATTR_COLOR = "color"
 ATTR_IMAGE = "image"
 ATTR_ANIM = "animation"
 ATTR_VOLUME = "volume"
@@ -286,12 +287,20 @@ def setup(hass, config):
                             attributes={'animation': anim})
 
         elif action == "weather":
+            # Get color from attribute
+            clr = call.data.get(ATTR_COLOR, "white")
+            # Convert color in rgb
+            c = color_convert(Color(clr).get_rgb())
             _LOGGER.debug('Action : weather')
             dev.send(set_temp_color(c[0], c[1], c[2], 0xff))
             hass.states.set(entity_id=DOMAIN + "." + slugify(mac) + "_current_view",
                             new_state=action)
 
         elif action == "clock":
+            # Get color from attribute
+            clr = call.data.get(ATTR_COLOR, "white")
+            # Convert color in rgb
+            c = color_convert(Color(clr).get_rgb())
             _LOGGER.debug('Action : clock')
             dev.send(set_time_color(c[0], c[1], c[2], 0xff))
             hass.states.set(entity_id=DOMAIN + "." + slugify(mac) + "_current_view",

@@ -28,6 +28,24 @@ action:
             - "set_volume"
             - "set_time"
             - "set_brightness"
+    
+    color:
+      name: Color
+      description: The color to use for the action
+      required: true
+      example: "red"
+      default: "white"
+      # Selector (https://www.home-assistant.io/docs/blueprint/selectors/) to control the input UI for this field
+      selector:
+        select:
+          options:
+            - "white"
+            - "red"
+            - "green"
+            - "blue"
+            - "yellow"
+            - "cyan"
+            - "magenta"
 
     image:
       name: Image name
