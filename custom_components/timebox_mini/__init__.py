@@ -254,8 +254,6 @@ def setup(hass, config):
             _LOGGER.error('Error connecting to %s : %s' % (mac, e))
             return
 
-        c = color_convert(Color("white").get_rgb())
-
         if action == "image":
             image = call.data.get(ATTR_IMAGE, "home_assistant_black")
             _LOGGER.debug('Action : image %s' % (dir_path + "/matrices/" + image + ".png"))
