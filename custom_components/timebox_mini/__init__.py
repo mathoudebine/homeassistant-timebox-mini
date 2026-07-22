@@ -7,6 +7,7 @@ import datetime
 import logging
 import math
 import os
+import homeassistant.helpers.config_validation as cv
 
 # Width/height of the Timebox (11x11 for the Mini), can be changed for other Timebox support (untested)
 TIMEBOX_SIZE = 11
@@ -19,6 +20,7 @@ dir_path = os.path.dirname(os.path.realpath(__file__))
 
 # HomeAssistant service definitions
 DOMAIN = "timebox_mini"
+CONFIG_SCHEMA = cv.empty_config_schema(DOMAIN)
 ATTR_MAC = "mac_addr"
 ATTR_ACTION = "action"
 ATTR_COLOR = "color"

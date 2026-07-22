@@ -1,17 +1,15 @@
 {
   "domain": "timebox_mini",
   "name": "Timebox Mini",
-  "version": "1.0.2",
+  "codeowners": ["@mathoudebine"],
+  "dependencies": [],
   "documentation": "https://github.com/mathoudebine/homeassistant-timebox-mini",
+  "iot_class": "assumed_state",
   "issue_tracker": "https://github.com/mathoudebine/homeassistant-timebox-mini/issues",
   "requirements": [
     "colour",
     "pillow",
     "python-dateutil"
   ],
-  "dependencies": [],
-  "codeowners": [
-    "@mathoudebine"
-  ],
-  "iot_class": "assumed_state"
+  "version": "1.0.2"
 }
