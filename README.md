@@ -21,7 +21,7 @@ Timebox protocol extracted from [ScR4tCh/timebox](https://github.com/ScR4tCh/tim
     
 The Divoom Timebox Mini is a Bluetooth speaker with a 11x11 RGB LED matrix.
 
-![Timebox Mini](https://raw.githubusercontent.com/mathoudebine/homeassistant-timebox-mini/main/res/timebox-mini.jpg)
+![Timebox Mini](https://raw.githubusercontent.com/mathoudebine/homeassistant-timebox-mini/main/res/timebox-mini.png)
 
 This component allow to run the following actions on your Timebox Mini from a HomeAssistant service:
 - Set the clock automatically from your system clock
