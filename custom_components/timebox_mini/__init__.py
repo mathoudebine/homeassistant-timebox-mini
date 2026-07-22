@@ -1,3 +1,4 @@
+from functools import partial
 from PIL import Image
 from colour import Color
 from homeassistant.util import slugify
@@ -8,6 +9,9 @@ import logging
 import math
 import os
 import homeassistant.helpers.config_validation as cv
+from homeassistant.config_entries import ConfigEntry
+from homeassistant.core import HomeAssistant
+from homeassistant.helpers.typing import ConfigType
 
 # Width/height of the Timebox (11x11 for the Mini), can be changed for other Timebox support (untested)
 TIMEBOX_SIZE = 11
@@ -239,98 +243,133 @@ def prepare_animation(frames, delay=0):
     return ret
 
 
-def setup(hass, config):
-    def handle_action(call):
-        mac = call.data.get(ATTR_MAC, "00:00:00:00:00:00")
-        action = call.data.get(ATTR_ACTION, "weather")
+def _handle_action(hass, call):
+    mac = call.data.get(ATTR_MAC, "")
+    action = call.data.get(ATTR_ACTION, "weather")
 
-        if mac == "":
-            _LOGGER.error("MAC address not specified, aborting service call")
+    if not mac:
+        entries = hass.config_entries.async_entries(DOMAIN)
+        if len(entries) == 1:
+            mac = entries[0].data.get(ATTR_MAC, "")
+        elif len(entries) > 1:
+            _LOGGER.error("Multiple Timebox Mini entries found; specify a MAC address in the service call")
             return
 
-        try:
-            dev = Timebox(mac)
-            dev.connect()
-            _LOGGER.debug('Connected to %s' % mac)
-        except Exception as e:
-            _LOGGER.error('Error connecting to %s : %s' % (mac, e))
-            return
+    if not mac:
+        _LOGGER.error("MAC address not specified, aborting service call")
+        return
 
-        if action == "image":
-            image = call.data.get(ATTR_IMAGE, "home_assistant_black")
-            _LOGGER.debug('Action : image %s' % (dir_path + "/matrices/" + image + ".png"))
-            dev.send(conv_image(load_image(dir_path + "/matrices/" + image + ".png")))
-            hass.states.set(entity_id=DOMAIN + "." + slugify(mac) + "_current_view",
-                            new_state=action,
-                            attributes={'image': image})
+    try:
+        dev = Timebox(mac)
+        dev.connect()
+        _LOGGER.debug('Connected to %s' % mac)
+    except Exception as e:
+        _LOGGER.error('Error connecting to %s : %s' % (mac, e))
+        return
 
-        elif action == "animation":
-            anim = call.data.get(ATTR_ANIM, "orange_warning")
-            _LOGGER.debug('Action : animation %s' % (dir_path + "/animations/" + anim + ".gif"))
-            frames = []
-            imagedata = Image.open(dir_path + "/animations/" + anim + ".gif")
-            # Get duration of first frame and use it for all animation
-            delay = int(imagedata.info['duration']/200)
-            if delay <= 0:
-                delay = 1
-            for f in load_gif_frames(imagedata):
-                frames.append(f)
-            i = 0
-            for f in prepare_animation(frames, delay=delay):
-                i = i + 1
-                if i == len(frames):
-                    dev.send(f)
-                else:
-                    dev.send(f, False)
-            hass.states.set(entity_id=DOMAIN + "." + slugify(mac) + "_current_view",
-                            new_state=action,
-                            attributes={'animation': anim})
+    if action == "image":
+        image = call.data.get(ATTR_IMAGE, "home_assistant_black")
+        _LOGGER.debug('Action : image %s' % (dir_path + "/matrices/" + image + ".png"))
+        dev.send(conv_image(load_image(dir_path + "/matrices/" + image + ".png")))
+        hass.states.set(entity_id=DOMAIN + "." + slugify(mac) + "_current_view",
+                        new_state=action,
+                        attributes={'image': image})
 
-        elif action == "weather":
-            # Get color from attribute
-            clr = call.data.get(ATTR_COLOR, "white")
-            # Convert color in rgb
-            c = color_convert(Color(clr).get_rgb())
-            _LOGGER.debug('Action : weather')
-            dev.send(set_temp_color(c[0], c[1], c[2], 0xff))
-            hass.states.set(entity_id=DOMAIN + "." + slugify(mac) + "_current_view",
-                            new_state=action)
+    elif action == "animation":
+        anim = call.data.get(ATTR_ANIM, "orange_warning")
+        _LOGGER.debug('Action : animation %s' % (dir_path + "/animations/" + anim + ".gif"))
+        frames = []
+        imagedata = Image.open(dir_path + "/animations/" + anim + ".gif")
+        # Get duration of first frame and use it for all animation
+        delay = int(imagedata.info['duration']/200)
+        if delay <= 0:
+            delay = 1
+        for f in load_gif_frames(imagedata):
+            frames.append(f)
+        i = 0
+        for f in prepare_animation(frames, delay=delay):
+            i = i + 1
+            if i == len(frames):
+                dev.send(f)
+            else:
+                dev.send(f, False)
+        hass.states.set(entity_id=DOMAIN + "." + slugify(mac) + "_current_view",
+                        new_state=action,
+                        attributes={'animation': anim})
 
-        elif action == "clock":
-            # Get color from attribute
-            clr = call.data.get(ATTR_COLOR, "white")
-            # Convert color in rgb
-            c = color_convert(Color(clr).get_rgb())
-            _LOGGER.debug('Action : clock')
-            dev.send(set_time_color(c[0], c[1], c[2], 0xff))
-            hass.states.set(entity_id=DOMAIN + "." + slugify(mac) + "_current_view",
-                            new_state=action)
+    elif action == "weather":
+        # Get color from attribute
+        clr = call.data.get(ATTR_COLOR, "white")
+        # Convert color in rgb
+        c = color_convert(Color(clr).get_rgb())
+        _LOGGER.debug('Action : weather')
+        dev.send(set_temp_color(c[0], c[1], c[2], 0xff))
+        hass.states.set(entity_id=DOMAIN + "." + slugify(mac) + "_current_view",
+                        new_state=action)
 
-        elif action == "set_volume":
-            vol = call.data.get(ATTR_VOLUME, 4)
-            _LOGGER.debug('Action : set_volume %d' % vol)
-            head = [0x04, 0x00, 0x08]
-            ck1, ck2 = checksum(sum(head) + vol)
-            dev.send([0x01] + head + mask([vol]) + mask([ck1, ck2]) + [0x02])
+    elif action == "clock":
+        # Get color from attribute
+        clr = call.data.get(ATTR_COLOR, "white")
+        # Convert color in rgb
+        c = color_convert(Color(clr).get_rgb())
+        _LOGGER.debug('Action : clock')
+        dev.send(set_time_color(c[0], c[1], c[2], 0xff))
+        hass.states.set(entity_id=DOMAIN + "." + slugify(mac) + "_current_view",
+                        new_state=action)
 
-        elif action == "set_time":
-            _LOGGER.debug('Action : set_time')
-            dt = datetime.datetime.now()
-            head = [0x0A, 0x00, 0x18, dt.year % 100, int(dt.year / 100), dt.month, dt.day, dt.hour, dt.minute,
-                    dt.second]
-            s = sum(head)
-            ck1, ck2 = checksum(s)
-            dev.send([0x01] + mask(head) + mask([ck1, ck2]) + [0x02])
+    elif action == "set_volume":
+        vol = call.data.get(ATTR_VOLUME, 4)
+        _LOGGER.debug('Action : set_volume %d' % vol)
+        head = [0x04, 0x00, 0x08]
+        ck1, ck2 = checksum(sum(head) + vol)
+        dev.send([0x01] + head + mask([vol]) + mask([ck1, ck2]) + [0x02])
 
-        elif action == "set_brightness":
-            value = call.data.get(ATTR_BRIGHTNESS, 50)
-            _LOGGER.debug('Action : set_brightness %d', value)
-            dev.send(set_brightness(value))
- 
-        # Disconnect from device
-        dev.disconnect()
+    elif action == "set_time":
+        _LOGGER.debug('Action : set_time')
+        dt = datetime.datetime.now()
+        head = [0x0A, 0x00, 0x18, dt.year % 100, int(dt.year / 100), dt.month, dt.day, dt.hour, dt.minute,
+                dt.second]
+        s = sum(head)
+        ck1, ck2 = checksum(s)
+        dev.send([0x01] + mask(head) + mask([ck1, ck2]) + [0x02])
 
-    hass.services.register(DOMAIN, "action", handle_action)
+    elif action == "set_brightness":
+        value = call.data.get(ATTR_BRIGHTNESS, 50)
+        _LOGGER.debug('Action : set_brightness %d', value)
+        dev.send(set_brightness(value))
+
+    # Disconnect from device
+    dev.disconnect()
+
+
+def _setup_services(hass):
+    if hass.services.has_service(DOMAIN, "action"):
+        return
+    hass.services.register(DOMAIN, "action", partial(_handle_action, hass))
+
+
+def setup(hass: HomeAssistant, config: ConfigType):
+    _setup_services(hass)
 
     # Return boolean to indicate that initialization was successfully.
+    return True
+
+
+async def async_setup(hass: HomeAssistant, config: ConfigType):
+    _setup_services(hass)
+    return True
+
+
+async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
+    hass.data.setdefault(DOMAIN, {})
+    hass.data[DOMAIN][entry.entry_id] = {ATTR_MAC: entry.data.get(ATTR_MAC, "")}
+    _setup_services(hass)
+    return True
+
+
+async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry):
+    if DOMAIN in hass.data:
+        hass.data[DOMAIN].pop(entry.entry_id, None)
+        if not hass.data[DOMAIN]:
+            hass.data.pop(DOMAIN, None)
     return True

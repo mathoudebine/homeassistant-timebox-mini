@@ -1,0 +1,16 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect your Timebox Mini",
+        "description": "Enter the Bluetooth MAC address of your Timebox Mini.",
+        "data": {
+          "mac_addr": "MAC address"
+        }
+      }
+    },
+    "error": {
+      "invalid_mac": "Please enter a valid MAC address."
+    }
+  }
+}
