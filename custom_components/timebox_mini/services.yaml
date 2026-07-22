@@ -31,8 +31,8 @@ action:
     
     color:
       name: Color
-      description: The color to use for the action
-      required: true
+      description: The color to use for the 'weather' or 'clock' action
+      required: false
       example: "red"
       default: "white"
       # Selector (https://www.home-assistant.io/docs/blueprint/selectors/) to control the input UI for this field
